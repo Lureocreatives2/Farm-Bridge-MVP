@@ -1,0 +1,19 @@
+{
+  "name": "FarmBridge",
+  "short_name": "FarmBridge",
+  "description": "Nigerian farm marketplace — buy direct, no middlemen",
+  "start_url": "/pages/index.html",
+  "display": "standalone",
+  "background_color": "#f9f6f0",
+  "theme_color": "#2A6B2A",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌾</text></svg>",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ],
+  "categories": ["shopping", "food"],
+  "lang": "en-NG"
+}

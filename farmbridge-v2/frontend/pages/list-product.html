@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>List a Product — FarmBridge</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <style>
+    .list-layout { display: grid; grid-template-columns: 1fr 340px; gap: 2rem; max-width: 960px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+    @media(max-width:768px) { .list-layout { grid-template-columns: 1fr; } }
+    .form-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--r-xl); padding: 2rem; box-shadow: var(--shadow-md); }
+    .form-grid { display: flex; flex-direction: column; gap: 1.2rem; }
+    .row2 { display: grid; grid-template-columns: 2fr 1fr; gap: .75rem; }
+    .lookup-row { display: flex; gap: .5rem; }
+    .lookup-row input { flex: 1; }
+    .farmer-found { background: var(--g50); border: 1.5px solid var(--g300); border-radius: var(--r-sm); padding: .65rem 1rem; display: none; align-items: center; gap: .75rem; font-size: .875rem; }
+    .farmer-found.show { display: flex; }
+    .success-banner { background: var(--g50); border: 2px solid var(--g300); border-radius: var(--r-md); padding: 2rem; text-align: center; display: none; }
+    .success-banner.show { display: block; }
+    .tip-card { background: var(--cream2); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 1.25rem; }
+    .tip-card h3 { font-size: .95rem; margin-bottom: .75rem; }
+    .tip-card li { font-size: .82rem; color: var(--ink3); margin-bottom: .4rem; padding-left: 1.1rem; position: relative; }
+    .tip-card li::before { content: "✓"; position: absolute; left: 0; color: var(--g500); font-weight: 700; }
+    .preview-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--r-lg); overflow: hidden; margin-top: 1.25rem; display: none; }
+    .preview-card.show { display: block; }
+    .preview-img { width: 100%; height: 160px; object-fit: cover; background: var(--cream2); }
+    .preview-body { padding: .9rem; }
+  </style>
+</head>
+<body>
+  <script src="js/api.js"></script>
+  <script src="js/layout.js"></script>
+
+  <div class="page-hero" style="padding:2.5rem 1.5rem 2rem">
+    <div class="page-hero__inner">
+      <span class="page-eyebrow">📋 Sell Your Produce</span>
+      <h1>List a Product</h1>
+      <p>Add your products and reach buyers across Nigeria</p>
+    </div>
+  </div>
+
+  <div class="list-layout">
+    <div class="form-card">
+      <form id="listForm" novalidate>
+        <div class="form-grid">
+          <p class="section-label">Step 1 — Verify Farmer Account</p>
+          <div class="form-group">
+            <label class="form-label">Your Phone Number *</label>
+            <div class="lookup-row">
+              <input class="form-control" type="tel" id="lookupPhone" placeholder="08012345678" />
+              <button type="button" class="btn btn--outline btn--sm" id="lookupBtn" onclick="lookupFarmer()">Verify</button>
+            </div>
+            <span class="form-hint">Not registered? <a href="register-farmer.html" style="color:var(--g700);font-weight:600">Register here</a></span>
+          </div>
+          <div class="farmer-found" id="farmerFound">
+            <span style="font-size:1.5rem">🧑‍🌾</span>
+            <div><div id="farmerFoundName" style="font-weight:700"></div><div id="farmerFoundFarm" style="font-size:.8rem;color:var(--g700)"></div></div>
+          </div>
+          <input type="hidden" id="farmerId" />
+
+          <p class="section-label" style="margin-top:.5rem">Step 2 — Product Details</p>
+          <div class="form-group">
+            <label class="form-label" for="pName">Product Name *</label>
+            <input class="form-control" type="text" id="pName" placeholder="e.g. Fresh Tomatoes" required oninput="updatePreview()" />
+            <span class="form-error">Please enter a product name</span>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="pCat">Category *</label>
+            <select class="form-control" id="pCat" required onchange="updatePreview()">
+              <option value="">— Select category —</option>
+              <option value="GRAINS">🌾 Grains</option>
+              <option value="VEGETABLES">🥦 Vegetables</option>
+              <option value="FRUITS">🍊 Fruits</option>
+              <option value="TUBERS">🍠 Tubers</option>
+              <option value="LEGUMES">🫘 Legumes</option>
+              <option value="LIVESTOCK">🐄 Livestock</option>
+              <option value="DAIRY">🥛 Dairy</option>
+              <option value="OTHER">📦 Other</option>
+            </select>
+            <span class="form-error">Please select a category</span>
+          </div>
+          <div class="row2">
+            <div class="form-group">
+              <label class="form-label" for="pPrice">Price (₦) *</label>
+              <input class="form-control" type="number" id="pPrice" placeholder="5000" min="1" required oninput="updatePreview()" />
+              <span class="form-error">Enter a valid price</span>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="pUnit">Per *</label>
+              <input class="form-control" type="text" id="pUnit" placeholder="kg / bag" required oninput="updatePreview()" />
+              <span class="form-error">Unit required</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="pDesc">Description *</label>
+            <textarea class="form-control" id="pDesc" rows="4" placeholder="Quality, freshness, harvest date, minimum order…" required></textarea>
+            <span class="form-error">Please add a description (10+ characters)</span>
+          </div>
+
+          <p class="section-label">Step 3 — Product Photo *</p>
+          <div class="upload-zone" id="uploadZone" ondragover="ev(event,'over')" ondragleave="ev(event,'leave')" ondrop="ev(event,'drop')">
+            <input type="file" id="imgInput" accept="image/jpeg,image/png,image/webp" onchange="handleFile(this.files[0])" />
+            <div id="uploadPrompt">
+              <div class="upload-zone__icon">📸</div>
+              <div style="font-size:.9rem;font-weight:500;color:var(--ink2)">Click to upload or drag & drop</div>
+              <div style="font-size:.78rem;color:var(--muted);margin-top:.2rem">JPG, PNG or WEBP · Max 5MB</div>
+            </div>
+            <img id="imgPreview" class="upload-preview" alt="Preview" />
+          </div>
+
+          <button type="submit" class="btn btn--green btn--full btn--lg" id="submitBtn">🌾 List My Product</button>
+        </div>
+      </form>
+
+      <div class="success-banner" id="successBanner">
+        <div style="font-size:3.5rem;margin-bottom:.75rem">✅</div>
+        <h2 style="color:var(--g700);margin-bottom:.5rem">Product Listed!</h2>
+        <p style="color:var(--ink3);margin-bottom:1.5rem">Your product is now live and visible to buyers across Nigeria.</p>
+        <div style="display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap">
+          <a id="viewLink" href="#" class="btn btn--green">View Listing →</a>
+          <button onclick="resetForm()" class="btn btn--outline">List Another</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div>
+      <div class="tip-card">
+        <h3>📋 Listing Tips</h3>
+        <ul>
+          <li>Use a clear, real photo of your product</li>
+          <li>Mention harvest date and freshness</li>
+          <li>State minimum order quantity</li>
+          <li>Include packaging details</li>
+          <li>Set a fair, competitive price</li>
+          <li>Describe delivery or pickup options</li>
+        </ul>
+      </div>
+
+      <div class="preview-card" id="previewCard">
+        <img id="previewImg" class="preview-img" src="" alt="" />
+        <div class="preview-body">
+          <span class="badge" id="previewCat" style="background:var(--g500)">Category</span>
+          <h3 id="previewName" style="margin:.4rem 0 .2rem;font-size:.95rem">Product name</h3>
+          <p id="previewPrice" style="color:var(--g700);font-weight:700">₦ —</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    initLayout("shop");
+    let verifiedId = null;
+
+    async function lookupFarmer() {
+      const phone = document.getElementById("lookupPhone").value.trim();
+      if (!phone) return Utils.toast("Enter your phone number first", "warn");
+      const btn = document.getElementById("lookupBtn");
+      btn.disabled = true; btn.textContent = "…";
+      try {
+        const { data } = await FarmersAPI.lookupByPhone(phone);
+        verifiedId = data.farmerId;
+        document.getElementById("farmerId").value = verifiedId;
+        document.getElementById("farmerFoundName").textContent = data.name;
+        document.getElementById("farmerFoundFarm").textContent = `🏡 ${data.farmName} · ${data.state}`;
+        document.getElementById("farmerFound").classList.add("show");
+        Utils.toast(`Welcome, ${data.name}! ✓`);
+      } catch {
+        Utils.toast("Farmer not found. Please register first.", "error");
+        document.getElementById("farmerFound").classList.remove("show");
+        verifiedId = null;
+      } finally { btn.disabled = false; btn.textContent = "Verify"; }
+    }
+
+    function ev(e, type) {
+      e.preventDefault();
+      document.getElementById("uploadZone").classList.toggle("drag-over", type === "over");
+      if (type === "drop") {
+        document.getElementById("imgInput").files = e.dataTransfer.files;
+        handleFile(e.dataTransfer.files[0]);
+      }
+    }
+
+    function handleFile(file) {
+      if (!file) return;
+      if (file.size > 5 * 1024 * 1024) return Utils.toast("Image must be under 5MB", "error");
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const prev = document.getElementById("imgPreview");
+        prev.src = e.target.result; prev.style.display = "block";
+        document.getElementById("uploadPrompt").style.display = "none";
+        document.getElementById("previewImg").src = e.target.result;
+        document.getElementById("previewCard").classList.add("show");
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function updatePreview() {
+      const name = document.getElementById("pName").value;
+      const price = document.getElementById("pPrice").value;
+      const unit = document.getElementById("pUnit").value;
+      const cat = document.getElementById("pCat").value;
+      if (name || price || cat) document.getElementById("previewCard").classList.add("show");
+      if (name) document.getElementById("previewName").textContent = name;
+      if (price && unit) document.getElementById("previewPrice").textContent = `${Utils.formatNaira(price)} / ${unit}`;
+      if (cat) { document.getElementById("previewCat").textContent = Utils.titleCase(cat); document.getElementById("previewCat").style.background = Utils.catColor[cat] || "#888"; }
+    }
+
+    document.getElementById("listForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      if (!verifiedId) return Utils.toast("Verify your farmer account first", "warn");
+      if (!validateForm()) return;
+      const btn = document.getElementById("submitBtn");
+      btn.disabled = true; btn.textContent = "Uploading…";
+      try {
+        const fd = new FormData();
+        fd.append("farmerId", verifiedId);
+        fd.append("name", document.getElementById("pName").value.trim());
+        fd.append("category", document.getElementById("pCat").value);
+        fd.append("price", document.getElementById("pPrice").value);
+        fd.append("unit", document.getElementById("pUnit").value.trim());
+        fd.append("description", document.getElementById("pDesc").value.trim());
+        const img = document.getElementById("imgInput").files[0];
+        if (img) fd.append("image", img);
+        const res = await ProductsAPI.create(fd);
+        document.getElementById("listForm").style.display = "none";
+        document.getElementById("successBanner").classList.add("show");
+        document.getElementById("viewLink").href = `product.html?id=${res.data.id}`;
+        Utils.toast("Product listed! 🎉");
+      } catch (err) {
+        Utils.toast(err.message || "Failed to list", "error");
+        btn.disabled = false; btn.textContent = "🌾 List My Product";
+      }
+    });
+
+    function validateForm() {
+      let ok = true;
+      const set = (id, valid) => { document.getElementById(id).classList.toggle("invalid", !valid); if (!valid) ok = false; };
+      set("pName", document.getElementById("pName").value.trim().length >= 2);
+      set("pCat", !!document.getElementById("pCat").value);
+      set("pPrice", parseFloat(document.getElementById("pPrice").value) > 0);
+      set("pUnit", document.getElementById("pUnit").value.trim().length >= 1);
+      set("pDesc", document.getElementById("pDesc").value.trim().length >= 10);
+      if (!document.getElementById("imgInput").files.length) { Utils.toast("Please upload a product image", "warn"); ok = false; }
+      return ok;
+    }
+
+    function resetForm() {
+      document.getElementById("listForm").reset();
+      document.getElementById("listForm").style.display = "block";
+      document.getElementById("successBanner").classList.remove("show");
+      document.getElementById("farmerFound").classList.remove("show");
+      document.getElementById("imgPreview").style.display = "none";
+      document.getElementById("uploadPrompt").style.display = "block";
+      document.getElementById("previewCard").classList.remove("show");
+      verifiedId = null;
+    }
+  </script>
+</body>
+</html>

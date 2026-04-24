@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FarmBridge — Fresh from Nigerian Farms</title>
+  <meta name="description" content="Connect directly with Nigerian farmers. Fresh produce, fair prices, no middlemen." />
+  <link rel="stylesheet" href="css/styles.css" />
+  <style>
+    /* Hero */
+    .hero {
+      background: linear-gradient(135deg, var(--g900) 0%, var(--g700) 55%, var(--g500) 100%);
+      padding: 6rem 1.5rem 5rem; text-align: center; color: var(--white); position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: ""; position: absolute; inset: 0; opacity: .05;
+      background: repeating-linear-gradient(45deg,#fff 0,#fff 1px,transparent 0,transparent 20px);
+    }
+    .hero::after {
+      content: ""; position: absolute; bottom: -2px; left: 0; right: 0; height: 60px;
+      background: var(--cream); clip-path: ellipse(55% 100% at 50% 100%);
+    }
+    .hero__inner { position: relative; max-width: 700px; margin: 0 auto; }
+    .hero h1 { font-size: clamp(2rem, 5vw, 3.2rem); color: var(--white); margin-bottom: 1rem; }
+    .hero h1 em { color: var(--a400); font-style: normal; }
+    .hero p { font-size: 1.1rem; opacity: .8; max-width: 520px; margin: 0 auto 2.5rem; }
+    .hero__btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+    /* Stats */
+    .stats { background: var(--g900); padding: 2rem 1.5rem; }
+    .stats__inner { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; text-align: center; }
+    .stat__num { font-family: var(--font-d); font-size: 2rem; font-weight: 800; color: var(--a400); }
+    .stat__label { font-size: .8rem; color: rgba(255,255,255,.55); text-transform: uppercase; letter-spacing: .8px; }
+
+    /* Categories */
+    .cat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 1rem; }
+    .cat-card {
+      background: var(--white); border: 1px solid var(--border); border-radius: var(--r-lg);
+      padding: 1.5rem 1rem; text-align: center; cursor: pointer; transition: all var(--t);
+    }
+    .cat-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); border-color: var(--g300); }
+    .cat-card__icon { font-size: 2rem; margin-bottom: .5rem; }
+    .cat-card__label { font-size: .82rem; font-weight: 600; color: var(--ink2); }
+
+    /* How it works */
+    .how-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 2rem; }
+    .how-step { text-align: center; }
+    .how-step__num {
+      width: 52px; height: 52px; border-radius: 50%; background: var(--g100);
+      color: var(--g700); font-family: var(--font-d); font-size: 1.3rem; font-weight: 800;
+      display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem;
+    }
+    .how-step h3 { font-size: 1rem; margin-bottom: .4rem; }
+    .how-step p { font-size: .875rem; color: var(--ink3); }
+
+    /* Banner */
+    .cta-banner {
+      background: linear-gradient(135deg, var(--g900), var(--g700));
+      border-radius: var(--r-xl); padding: 3rem 2rem; text-align: center; color: var(--white);
+    }
+    .cta-banner h2 { color: var(--white); margin-bottom: .75rem; }
+    .cta-banner p { color: rgba(255,255,255,.75); max-width: 440px; margin: 0 auto 1.8rem; }
+  </style>
+</head>
+<body>
+  <script src="js/api.js"></script>
+  <script src="js/layout.js"></script>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero__inner">
+      <span class="page-eyebrow">🇳🇬 Nigeria's Farm Marketplace</span>
+      <h1>Fresh Produce<br />from <em>Nigerian Farms</em></h1>
+      <p>Buy directly from verified farmers across Nigeria. No middlemen. Better prices. Fresher produce.</p>
+      <div class="hero__btns">
+        <a href="shop.html" class="btn btn--amber btn--lg">Browse Products</a>
+        <a href="register-farmer.html" class="btn btn--outline btn--lg" style="color:var(--white);border-color:rgba(255,255,255,.5)">Sell Your Produce</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats -->
+  <section class="stats">
+    <div class="container stats__inner">
+      <div><div class="stat__num">500+</div><div class="stat__label">Active Farmers</div></div>
+      <div><div class="stat__num">2,000+</div><div class="stat__label">Products Listed</div></div>
+      <div><div class="stat__num">36</div><div class="stat__label">States Covered</div></div>
+      <div><div class="stat__num">8</div><div class="stat__label">Product Categories</div></div>
+    </div>
+  </section>
+
+  <!-- Categories -->
+  <section class="section">
+    <div class="container">
+      <div class="section-title"><h2>Browse by Category</h2><p>Find exactly what you need</p></div>
+      <div class="cat-grid">
+        <div class="cat-card" onclick="window.location='shop.html?category=GRAINS'"><div class="cat-card__icon">🌾</div><div class="cat-card__label">Grains</div></div>
+        <div class="cat-card" onclick="window.location='shop.html?category=VEGETABLES'"><div class="cat-card__icon">🥦</div><div class="cat-card__label">Vegetables</div></div>
+        <div class="cat-card" onclick="window.location='shop.html?category=FRUITS'"><div class="cat-card__icon">🍊</div><div class="cat-card__label">Fruits</div></div>
+        <div class="cat-card" onclick="window.location='shop.html?category=TUBERS'"><div class="cat-card__icon">🍠</div><div class="cat-card__label">Tubers</div></div>
+        <div class="cat-card" onclick="window.location='shop.html?category=LEGUMES'"><div class="cat-card__icon">🫘</div><div class="cat-card__label">Legumes</div></div>
+        <div class="cat-card" onclick="window.location='shop.html?category=LIVESTOCK'"><div class="cat-card__icon">🐄</div><div class="cat-card__label">Livestock</div></div>
+        <div class="cat-card" onclick="window.location='shop.html?category=DAIRY'"><div class="cat-card__icon">🥛</div><div class="cat-card__label">Dairy</div></div>
+        <div class="cat-card" onclick="window.location='shop.html'"><div class="cat-card__icon">📦</div><div class="cat-card__label">All Products</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Products -->
+  <section class="section" style="background:var(--cream2);padding:3rem 0">
+    <div class="container">
+      <div class="section-title" style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:1rem">
+        <div><h2>Fresh Listings</h2><p>Added recently by farmers near you</p></div>
+        <a href="shop.html" class="btn btn--ghost">View all →</a>
+      </div>
+      <div class="products-grid" id="featuredGrid"></div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section class="section">
+    <div class="container">
+      <div class="section-title" style="text-align:center"><h2>How FarmBridge Works</h2></div>
+      <div class="how-grid">
+        <div class="how-step"><div class="how-step__num">1</div><h3>Browse Listings</h3><p>Search by product, category, or state. Filter to find exactly what you need.</p></div>
+        <div class="how-step"><div class="how-step__num">2</div><h3>View Details</h3><p>See full product info, pricing, location, and the farmer's profile.</p></div>
+        <div class="how-step"><div class="how-step__num">3</div><h3>Contact via WhatsApp</h3><p>Click one button to message the farmer directly. Negotiate price and arrange delivery.</p></div>
+        <div class="how-step"><div class="how-step__num">4</div><h3>Receive Fresh Produce</h3><p>Arrange collection or delivery with the farmer. No platform fees.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Banner -->
+  <section class="section">
+    <div class="container">
+      <div class="cta-banner">
+        <h2>Are You a Farmer?</h2>
+        <p>Register your farm and list your products for free. Reach buyers across Nigeria in minutes.</p>
+        <a href="register-farmer.html" class="btn btn--amber btn--lg">Register Your Farm →</a>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    initLayout("home");
+
+    async function loadFeatured() {
+      const grid = document.getElementById("featuredGrid");
+      grid.innerHTML = Utils.skels(6);
+      try {
+        const { data } = await ProductsAPI.getAll({ page: 1 });
+        grid.innerHTML = data.slice(0, 6).map(Utils.card).join("") || `<div class="empty" style="grid-column:1/-1"><div class="empty__icon">🌱</div><h3>No products yet</h3></div>`;
+      } catch {
+        grid.innerHTML = `<div class="empty" style="grid-column:1/-1"><div class="empty__icon">⚠️</div><h3>Couldn't load products</h3><p>Check your connection</p></div>`;
+      }
+    }
+    loadFeatured();
+  </script>
+</body>
+</html>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Our Farmers — FarmBridge</title>
+  <meta name="description" content="Meet the farmers behind FarmBridge. Verified producers from across Nigeria." />
+  <link rel="stylesheet" href="css/styles.css" />
+  <style>
+    .farmer-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.25rem; }
+    .farmer-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 1.5rem; transition: all var(--t); cursor: pointer; }
+    .farmer-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); border-color: var(--g300); }
+    .farmer-card__avatar {
+      width: 64px; height: 64px; border-radius: 50%; background: var(--g100);
+      color: var(--g700); font-family: var(--font-d); font-size: 1.5rem; font-weight: 800;
+      display: flex; align-items: center; justify-content: center; margin-bottom: 1rem;
+    }
+    .farmer-card__name { font-size: 1.05rem; font-weight: 700; margin-bottom: .2rem; }
+    .farmer-card__farm { font-size: .85rem; color: var(--g700); font-weight: 500; margin-bottom: .2rem; }
+    .farmer-card__state { font-size: .8rem; color: var(--muted); margin-bottom: .9rem; }
+    .farmer-card__products { font-size: .78rem; font-weight: 600; color: var(--g700); background: var(--g50); padding: .3rem .7rem; border-radius: var(--r-pill); display: inline-block; }
+
+    /* Note: In a real app, you'd have a /api/farmers endpoint that returns all farmers.
+       For now we show a static representative grid with a note to developers */
+    .dev-note { background: var(--a50); border: 1px solid var(--a300); border-radius: var(--r-md); padding: 1rem 1.25rem; font-size: .83rem; color: #92400e; margin-bottom: 2rem; }
+  </style>
+</head>
+<body>
+  <script src="js/api.js"></script>
+  <script src="js/layout.js"></script>
+
+  <div class="page-hero">
+    <div class="page-hero__inner">
+      <span class="page-eyebrow">🧑‍🌾 Verified Producers</span>
+      <h1>Meet Our Farmers</h1>
+      <p>Real people, real farms, real produce — from every corner of Nigeria</p>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="container">
+      <div class="dev-note">
+        <strong>Developer note:</strong> This page requires a <code>GET /api/farmers</code> endpoint (list all farmers) to be added to the backend. The cards below are static examples. Add that endpoint and call <code>FarmersAPI.getAll()</code> to make it dynamic.
+      </div>
+
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;margin-bottom:1.5rem">
+        <div class="section-title" style="margin:0"><h2>Active Farmers</h2><p>Listing fresh produce daily</p></div>
+        <div class="search-wrap" style="max-width:280px">
+          <input type="text" placeholder="Search by name or state…" id="farmerSearch" oninput="filterFarmers(this.value)" />
+          <button>Search</button>
+        </div>
+      </div>
+
+      <div class="farmer-grid" id="farmerGrid">
+        <!-- Static sample farmers — replace with API call -->
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="background:var(--cream2);padding:3rem 0;text-align:center">
+    <div class="container">
+      <h2 style="margin-bottom:.75rem">Are You a Farmer?</h2>
+      <p style="color:var(--ink3);max-width:420px;margin:0 auto 1.5rem">Join hundreds of farmers already selling on FarmBridge. Registration is free and takes 2 minutes.</p>
+      <a href="register-farmer.html" class="btn btn--green btn--lg">Register Your Farm →</a>
+    </div>
+  </section>
+
+  <script>
+    initLayout("farmers");
+
+    const SAMPLE_FARMERS = [
+      { name: "Emeka Okafor", farmName: "Okafor Green Farms", state: "Anambra", products: 6 },
+      { name: "Fatima Aliyu", farmName: "Aliyu Agro Estate", state: "Kano", products: 4 },
+      { name: "Bola Adeyemi", farmName: "Adeyemi Family Farm", state: "Oyo", products: 8 },
+      { name: "Chukwudi Nwosu", farmName: "Nwosu Organic Farms", state: "Enugu", products: 3 },
+      { name: "Aisha Mohammed", farmName: "Sahel Fresh Produce", state: "Kaduna", products: 5 },
+      { name: "Tunde Fashola", farmName: "Fashola Agri Hub", state: "Lagos", products: 7 },
+      { name: "Grace Ezeh", farmName: "Ezeh's Garden", state: "Imo", products: 4 },
+      { name: "Sule Garba", farmName: "Garba Cattle Ranch", state: "Bauchi", products: 2 },
+      { name: "Ngozi Eze", farmName: "Eze Tuber Farm", state: "Anambra", products: 5 },
+      { name: "Ibrahim Bello", farmName: "Bello Rice Fields", state: "Niger", products: 3 },
+      { name: "Chioma Obi", farmName: "Obi Poultry & Eggs", state: "Enugu", products: 6 },
+      { name: "Aminu Kano", farmName: "Kano Fresh Markets", state: "Kano", products: 9 },
+    ];
+
+    let filtered = [...SAMPLE_FARMERS];
+
+    function renderFarmers(list) {
+      const grid = document.getElementById("farmerGrid");
+      if (!list.length) {
+        grid.innerHTML = `<div class="empty" style="grid-column:1/-1"><div class="empty__icon">🌱</div><h3>No farmers found</h3></div>`;
+        return;
+      }
+      grid.innerHTML = list.map((f) => {
+        const initials = f.name.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2);
+        return `
+          <div class="farmer-card">
+            <div class="farmer-card__avatar">${initials}</div>
+            <div class="farmer-card__name">${f.name}</div>
+            <div class="farmer-card__farm">🏡 ${f.farmName}</div>
+            <div class="farmer-card__state">📍 ${f.state} State</div>
+            <span class="farmer-card__products">${f.products} product${f.products !== 1 ? "s" : ""} listed</span>
+          </div>`;
+      }).join("");
+    }
+
+    function filterFarmers(q) {
+      const term = q.toLowerCase();
+      filtered = SAMPLE_FARMERS.filter((f) =>
+        f.name.toLowerCase().includes(term) ||
+        f.state.toLowerCase().includes(term) ||
+        f.farmName.toLowerCase().includes(term)
+      );
+      renderFarmers(filtered);
+    }
+
+    renderFarmers(SAMPLE_FARMERS);
+  </script>
+</body>
+</html>

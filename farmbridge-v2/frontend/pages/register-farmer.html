@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Register as Farmer — FarmBridge</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <style>
+    .reg-layout { display: grid; grid-template-columns: 1fr 380px; gap: 2.5rem; max-width: 960px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; }
+    @media(max-width:768px) { .reg-layout { grid-template-columns: 1fr; } }
+    .form-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--r-xl); padding: 2rem; box-shadow: var(--shadow-md); }
+    .form-grid { display: flex; flex-direction: column; gap: 1.2rem; }
+    .success-state { text-align: center; padding: 2rem 0; display: none; }
+    .success-state__icon { font-size: 4rem; margin-bottom: 1rem; }
+    .id-box { background: var(--cream2); border: 1.5px dashed var(--border2); border-radius: var(--r-sm); padding: 1rem; margin: 1.2rem 0; font-family: monospace; font-size: .875rem; word-break: break-all; }
+    .id-box strong { color: var(--g700); display: block; margin-bottom: .3rem; font-size: .78rem; text-transform: uppercase; letter-spacing: .5px; }
+    .benefit-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 1.25rem; margin-bottom: 1rem; display: flex; gap: .9rem; align-items: flex-start; }
+    .benefit-card__icon { font-size: 1.5rem; flex-shrink: 0; }
+    .benefit-card__title { font-weight: 700; font-size: .92rem; margin-bottom: .2rem; }
+    .benefit-card__desc { font-size: .82rem; color: var(--ink3); }
+  </style>
+</head>
+<body>
+  <script src="js/api.js"></script>
+  <script src="js/layout.js"></script>
+
+  <div class="page-hero">
+    <div class="page-hero__inner">
+      <span class="page-eyebrow">🌾 Join FarmBridge</span>
+      <h1>Register Your Farm</h1>
+      <p>Free to join. Start listing your produce in under 2 minutes.</p>
+    </div>
+  </div>
+
+  <div class="reg-layout">
+    <!-- Form -->
+    <div class="form-card">
+      <form id="regForm" novalidate>
+        <div class="form-grid">
+          <p class="section-label">Personal Information</p>
+
+          <div class="form-group">
+            <label class="form-label" for="name">Full Name *</label>
+            <input class="form-control" type="text" id="name" placeholder="e.g. Emeka Okafor" required />
+            <span class="form-error">Please enter your full name (at least 2 characters)</span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="phone">WhatsApp Phone Number *</label>
+            <input class="form-control" type="tel" id="phone" placeholder="e.g. 08012345678" required />
+            <span class="form-error">Enter a valid Nigerian number (e.g. 08012345678)</span>
+            <span class="form-hint">Buyers will contact you on this number via WhatsApp</span>
+          </div>
+
+          <p class="section-label" style="margin-top:.5rem">Farm Details</p>
+
+          <div class="form-group">
+            <label class="form-label" for="farmName">Farm Name *</label>
+            <input class="form-control" type="text" id="farmName" placeholder="e.g. Green Valley Farms" required />
+            <span class="form-error">Please enter your farm name</span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="state">State *</label>
+            <select class="form-control" id="state" required>
+              <option value="">— Select your state —</option>
+              <option>Abia</option><option>Adamawa</option><option>Akwa Ibom</option><option>Anambra</option>
+              <option>Bauchi</option><option>Bayelsa</option><option>Benue</option><option>Borno</option>
+              <option>Cross River</option><option>Delta</option><option>Ebonyi</option><option>Edo</option>
+              <option>Ekiti</option><option>Enugu</option><option>FCT</option><option>Gombe</option>
+              <option>Imo</option><option>Jigawa</option><option>Kaduna</option><option>Kano</option>
+              <option>Katsina</option><option>Kebbi</option><option>Kogi</option><option>Kwara</option>
+              <option>Lagos</option><option>Nasarawa</option><option>Niger</option><option>Ogun</option>
+              <option>Ondo</option><option>Osun</option><option>Oyo</option><option>Plateau</option>
+              <option>Rivers</option><option>Sokoto</option><option>Taraba</option><option>Yobe</option>
+              <option>Zamfara</option>
+            </select>
+            <span class="form-error">Please select your state</span>
+          </div>
+
+          <button type="submit" class="btn btn--green btn--full btn--lg" id="submitBtn">Register My Farm →</button>
+
+          <p style="text-align:center;font-size:.82rem;color:var(--muted)">
+            Already registered? <a href="list-product.html" style="color:var(--g700);font-weight:600">List a product</a>
+          </p>
+        </div>
+      </form>
+
+      <!-- Success -->
+      <div class="success-state" id="successState">
+        <div class="success-state__icon">🎉</div>
+        <h2 style="color:var(--g700);margin-bottom:.5rem">Welcome to FarmBridge!</h2>
+        <p style="color:var(--ink3);margin-bottom:.5rem">Your farm is now registered. Save your Farmer ID to list products.</p>
+        <div class="id-box"><strong>Your Farmer ID</strong><span id="farmerIdDisplay">—</span></div>
+        <div style="display:flex;flex-direction:column;gap:.75rem">
+          <button class="btn btn--amber btn--full" onclick="copyId()">📋 Copy Farmer ID</button>
+          <a href="list-product.html" class="btn btn--green btn--full">+ List Your First Product</a>
+          <a href="shop.html" class="btn btn--outline btn--full">Browse Marketplace</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar benefits -->
+    <div>
+      <h3 style="font-size:1rem;margin-bottom:1rem;color:var(--ink3);font-family:var(--font-b);font-weight:600;text-transform:uppercase;letter-spacing:.5px">Why join FarmBridge?</h3>
+
+      <div class="benefit-card"><div class="benefit-card__icon">🆓</div><div><div class="benefit-card__title">100% Free</div><div class="benefit-card__desc">No listing fees, no commission. You keep all your earnings.</div></div></div>
+      <div class="benefit-card"><div class="benefit-card__icon">🇳🇬</div><div><div class="benefit-card__title">Reach Nigeria-Wide Buyers</div><div class="benefit-card__desc">Your products visible to buyers across all 36 states.</div></div></div>
+      <div class="benefit-card"><div class="benefit-card__icon">📱</div><div><div class="benefit-card__title">WhatsApp Direct Contact</div><div class="benefit-card__desc">Buyers message you directly — no middlemen, no delays.</div></div></div>
+      <div class="benefit-card"><div class="benefit-card__icon">📸</div><div><div class="benefit-card__title">Photo Listings</div><div class="benefit-card__desc">Upload product photos to attract more buyers.</div></div></div>
+      <div class="benefit-card"><div class="benefit-card__icon">⚡</div><div><div class="benefit-card__title">List in 2 Minutes</div><div class="benefit-card__desc">Quick form. Your product goes live immediately.</div></div></div>
+    </div>
+  </div>
+
+  <script>
+    initLayout("farmers");
+
+    let savedFarmerId = "";
+
+    document.getElementById("regForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      if (!validate()) return;
+      const btn = document.getElementById("submitBtn");
+      btn.disabled = true; btn.textContent = "Registering…";
+      try {
+        const res = await FarmersAPI.register({
+          name: document.getElementById("name").value.trim(),
+          phone: document.getElementById("phone").value.trim(),
+          farmName: document.getElementById("farmName").value.trim(),
+          state: document.getElementById("state").value,
+        });
+        savedFarmerId = res.data.farmerId;
+        document.getElementById("farmerIdDisplay").textContent = savedFarmerId;
+        document.getElementById("regForm").style.display = "none";
+        document.getElementById("successState").style.display = "block";
+        Utils.toast("Farm registered! 🎉");
+      } catch (err) {
+        Utils.toast(err.message || "Registration failed", "error");
+        btn.disabled = false; btn.textContent = "Register My Farm →";
+      }
+    });
+
+    function validate() {
+      let ok = true;
+      const set = (id, valid) => { document.getElementById(id).classList.toggle("invalid", !valid); if (!valid) ok = false; };
+      set("name", document.getElementById("name").value.trim().length >= 2);
+      set("phone", /^(\+234|0)[789][01]\d{8}$/.test(document.getElementById("phone").value.trim()));
+      set("farmName", document.getElementById("farmName").value.trim().length >= 2);
+      set("state", !!document.getElementById("state").value);
+      return ok;
+    }
+
+    function copyId() {
+      navigator.clipboard.writeText(savedFarmerId).then(() => Utils.toast("Farmer ID copied!"));
+    }
+  </script>
+</body>
+</html>

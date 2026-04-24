@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About — FarmBridge</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <style>
+    .mission-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+    @media(max-width:768px) { .mission-grid { grid-template-columns: 1fr; gap: 2rem; } }
+    .mission-visual { background: linear-gradient(135deg, var(--g900), var(--g500)); border-radius: var(--r-xl); padding: 4rem 2rem; text-align: center; color: var(--white); }
+    .mission-visual__number { font-family: var(--font-d); font-size: 5rem; font-weight: 800; color: var(--a400); line-height: 1; }
+    .mission-visual__label { font-size: 1rem; opacity: .75; margin-top: .5rem; }
+    .value-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; }
+    .value-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 1.5rem; }
+    .value-card__icon { font-size: 2rem; margin-bottom: .75rem; }
+    .value-card__title { font-size: 1rem; font-weight: 700; margin-bottom: .4rem; }
+    .value-card__text { font-size: .875rem; color: var(--ink3); line-height: 1.7; }
+    .team-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1.5rem; }
+    .team-card { text-align: center; }
+    .team-avatar { width: 80px; height: 80px; border-radius: 50%; background: var(--g100); color: var(--g700); font-family: var(--font-d); font-size: 1.5rem; font-weight: 800; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; }
+    .team-name { font-weight: 700; font-size: .95rem; }
+    .team-role { font-size: .8rem; color: var(--muted); }
+  </style>
+</head>
+<body>
+  <script src="js/api.js"></script>
+  <script src="js/layout.js"></script>
+
+  <div class="page-hero">
+    <div class="page-hero__inner">
+      <span class="page-eyebrow">🌾 Our Story</span>
+      <h1>About FarmBridge</h1>
+      <p>We're on a mission to fix Nigeria's broken food supply chain — one direct connection at a time.</p>
+    </div>
+  </div>
+
+  <!-- Mission -->
+  <section class="section--lg">
+    <div class="container">
+      <div class="mission-grid">
+        <div>
+          <span class="page-eyebrow">Our Mission</span>
+          <h2 style="margin-top:.5rem;margin-bottom:1rem">Closing the Gap Between Farm and Table</h2>
+          <p style="color:var(--ink2);line-height:1.85;margin-bottom:1rem">Nigeria has one of Africa's most productive agricultural sectors, yet farmers often earn a fraction of what their produce is worth — while buyers pay inflated prices. The problem? Too many middlemen.</p>
+          <p style="color:var(--ink2);line-height:1.85;margin-bottom:1rem">FarmBridge removes that gap. We give farmers a digital storefront and connect them directly with buyers via WhatsApp — the tool every Nigerian already uses daily.</p>
+          <p style="color:var(--ink2);line-height:1.85">No commissions. No complicated apps. No gatekeepers. Just farmers and buyers doing business the way it should be.</p>
+        </div>
+        <div>
+          <div class="mission-visual">
+            <div class="mission-visual__number">0%</div>
+            <div class="mission-visual__label">Commission charged to farmers</div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem">
+            <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--r-md);padding:1.25rem;text-align:center">
+              <div style="font-family:var(--font-d);font-size:2rem;font-weight:800;color:var(--g700)">36</div>
+              <div style="font-size:.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px">States covered</div>
+            </div>
+            <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--r-md);padding:1.25rem;text-align:center">
+              <div style="font-family:var(--font-d);font-size:2rem;font-weight:800;color:var(--g700)">2min</div>
+              <div style="font-size:.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px">To list a product</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Values -->
+  <section class="section" style="background:var(--cream2);padding:3rem 0">
+    <div class="container">
+      <div class="section-title" style="text-align:center"><h2>Our Values</h2></div>
+      <div class="value-grid">
+        <div class="value-card"><div class="value-card__icon">🤝</div><div class="value-card__title">Direct Commerce</div><div class="value-card__text">Farmers and buyers deal directly. No platform takes a cut from either side.</div></div>
+        <div class="value-card"><div class="value-card__icon">🌍</div><div class="value-card__title">Nationwide Reach</div><div class="value-card__text">From Kano to Lagos, Anambra to Rivers — every state, every farmer.</div></div>
+        <div class="value-card"><div class="value-card__icon">📱</div><div class="value-card__title">Mobile First</div><div class="value-card__text">Built for Nigerians. WhatsApp, simple forms, photo uploads — tools you already use.</div></div>
+        <div class="value-card"><div class="value-card__icon">💚</div><div class="value-card__title">Fair Earnings</div><div class="value-card__text">When farmers earn more, rural communities thrive. That's the impact we're here for.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section">
+    <div class="container" style="text-align:center">
+      <h2 style="margin-bottom:.75rem">Join the Movement</h2>
+      <p style="color:var(--ink3);max-width:420px;margin:0 auto 2rem">Whether you're a farmer with produce to sell or a buyer looking for fresh food — FarmBridge is for you.</p>
+      <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap">
+        <a href="shop.html" class="btn btn--green btn--lg">Browse Products</a>
+        <a href="register-farmer.html" class="btn btn--amber btn--lg">Register as Farmer</a>
+      </div>
+    </div>
+  </section>
+
+  <script>initLayout("about");</script>
+</body>
+</html>

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FAQ — FarmBridge</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <style>
+    .faq-layout { max-width: 760px; margin: 0 auto; padding: 3rem 1.5rem 5rem; }
+    .faq-section { margin-bottom: 2.5rem; }
+    .faq-section-title { font-size: .78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); border-bottom: 1px solid var(--border); padding-bottom: .5rem; margin-bottom: 1rem; }
+    .faq-item { border: 1px solid var(--border); border-radius: var(--r-md); margin-bottom: .65rem; overflow: hidden; background: var(--white); }
+    .faq-q { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.25rem; cursor: pointer; font-weight: 600; font-size: .92rem; gap: 1rem; transition: background var(--t); }
+    .faq-q:hover { background: var(--cream); }
+    .faq-q.open { color: var(--g700); }
+    .faq-chevron { flex-shrink: 0; transition: transform .25s ease; font-style: normal; }
+    .faq-q.open .faq-chevron { transform: rotate(180deg); }
+    .faq-a { max-height: 0; overflow: hidden; transition: max-height .3s ease; }
+    .faq-a-inner { padding: 0 1.25rem 1.1rem; font-size: .88rem; color: var(--ink3); line-height: 1.8; border-top: 1px solid var(--cream2); padding-top: .9rem; }
+    .faq-a-inner a { color: var(--g700); font-weight: 600; }
+    .faq-item.open .faq-a { max-height: 400px; }
+  </style>
+</head>
+<body>
+  <script src="js/api.js"></script>
+  <script src="js/layout.js"></script>
+
+  <div class="page-hero">
+    <div class="page-hero__inner">
+      <span class="page-eyebrow">❓ Help Centre</span>
+      <h1>Frequently Asked Questions</h1>
+      <p>Quick answers to the questions we get most often</p>
+    </div>
+  </div>
+
+  <div class="faq-layout">
+
+    <!-- For Buyers -->
+    <div class="faq-section">
+      <div class="faq-section-title">For Buyers</div>
+      <div class="faq-item" onclick="toggle(this)">
+        <div class="faq-q">How do I buy from a farmer? <em class="faq-chevron">▾</em></div>
+        <div class="faq-a"><div class="faq-a-inner">Browse our <a href="shop.html">Shop page</a>, click on any product to see full details, then click the green "Contact Farmer on WhatsApp" button. This opens WhatsApp with a pre-filled message so you can negotiate price and arrange delivery directly with the farmer.</div></div>
+      </div>
+      <div class="faq-item" onclick="toggle(this)">
+        <div class="faq-q">Does FarmBridge charge buyers any fees? <em class="faq-chevron">▾</em></div>
+        <div class="faq-a"><div class="faq-a-inner">No — FarmBridge is completely free for buyers. You pay the farmer directly; we don't process or take any cut from transactions.</div></div>
+      </div>
+      <div class="faq-item" onclick="toggle(this)">
+        <div class="faq-q">How do I know the produce is fresh? <em class="faq-chevron">▾</em></div>
+        <div class="faq-a"><div class="faq-a-inner">Each listing includes a description from the farmer, which should include harvest date and quality details. We recommend asking the farmer directly via WhatsApp before committing to a large order. Always inspect goods on delivery before making payment.</div></div>
+      </div>
+      <div class="faq-item" onclick="toggle(this)">
+        <div class="faq-q">What if a product listing looks fake or suspicious? <em class="faq-chevron">▾</em></div>
+        <div class="faq-a"><div class="faq-a-inner">Use the <a href="contact.html">Contact page</a> to report it to our admin team. Select "Report a Listing" as the subject and include the product name. Our team will investigate and remove it within 24 hours.</div></div>
+      </div>
+      <div class="faq-item" onclick="toggle(this)">
+        <div class="faq-q">Can I search for produce in my state? <em class="faq-chevron">▾</em></div>
+        <div class="faq-a"><div class="faq-a-inner">Yes — on the <a href="shop.html">Shop page</a> use the state filter dropdown to see listings from farmers in a specific state.</div></div>
+      </div>
+    </div>
+
+    <!-- For Farmers -->
+    <div class="faq-section">
+      <div class="faq-section-title">For Farmers</div>
+      <div class="faq-item" onclick="toggle(this)">
+        <div class="faq-q">How do I register as a farmer? <em class="faq-chevron">▾</em></div>
+        <div class="faq-a"><div class="faq-a-inner">Go to <a href="register-farmer.html">Register Your Farm</a>, enter your name, phone number, farm name, and state. You'll receive a unique Farmer ID — save this, as you'll need it to list products.</div></div>
+      </div>
+      <div class="faq-item" onclick="toggle(this)">
+        <div class="faq-q">Is it free to list my products? <em class="faq-chevron">▾</em></div>
+        <div class="faq-a"><div class="faq-a-inner">Yes, completely free. FarmBridge charges no listing fees and no sales commission. You keep 100% of what you earn from buyers.</div></div>
+      </div>
+      <div class="faq-item" onclick="toggle(this)">
+        <div class="faq-q">How do buyers contact me? <em class="faq-chevron">▾</em></div>
+        <div class="faq-a"><div class="faq-a-inner">Buyers click the WhatsApp button on your product listing and are connected to you via your registered phone number. The message is pre-filled with your product name so you know exactly what they're interested in.</div></div>
+      </div>
+      <div class="faq-item" onclick="toggle(this)">
+        <div class="faq-q">My listing is pending — when will it go live? <em class="faq-chevron">▾</em></div>
+        <div class="faq-a"><div class="faq-a-inner">All new listings go through a quick admin review before being approved and made visible to buyers. This usually takes less than 24 hours. We review for quality, accurate descriptions, and appropriate pricing.</div></div>
+      </div>
+      <div class="faq-item" onclick="toggle(this)">
+        <div class="faq-q">Can I list multiple products? <em class="faq-chevron">▾</em></div>
+        <div class="faq-a"><div class="faq-a-inner">Yes — use the <a href="list-product.html">List a Product page</a> to add as many listings as you like. Each product gets its own page with a direct WhatsApp contact button.</div></div>
+      </div>
+      <div class="faq-item" onclick="toggle(this)">
+        <div class="faq-q">What makes a good listing? <em class="faq-chevron">▾</em></div>
+        <div class="faq-a"><div class="faq-a-inner">The best listings include: a clear real photo of the actual product, an accurate description with harvest date and quality details, your minimum order quantity, and packaging/delivery information. Listings with photos get significantly more buyer enquiries.</div></div>
+      </div>
+    </div>
+
+    <!-- Platform -->
+    <div class="faq-section">
+      <div class="faq-section-title">About FarmBridge</div>
+      <div class="faq-item" onclick="toggle(this)">
+        <div class="faq-q">Does FarmBridge handle payments or delivery? <em class="faq-chevron">▾</em></div>
+        <div class="faq-a"><div class="faq-a-inner">Not currently. FarmBridge connects buyers and farmers directly — payment and delivery are arranged between the two parties via WhatsApp. This keeps things simple and means no platform fees for anyone. Payment and delivery features are planned for a future update.</div></div>
+      </div>
+      <div class="faq-item" onclick="toggle(this)">
+        <div class="faq-q">Which states does FarmBridge cover? <em class="faq-chevron">▾</em></div>
+        <div class="faq-a"><div class="faq-a-inner">FarmBridge covers all 36 states and the FCT. Any Nigerian farmer can register and list products regardless of location.</div></div>
+      </div>
+      <div class="faq-item" onclick="toggle(this)">
+        <div class="faq-q">How do I report a problem or give feedback? <em class="faq-chevron">▾</em></div>
+        <div class="faq-a"><div class="faq-a-inner">Use our <a href="contact.html">Contact page</a>. We read every message and usually respond within 24 hours on weekdays.</div></div>
+      </div>
+    </div>
+
+    <div style="text-align:center;padding-top:1rem">
+      <p style="color:var(--muted);font-size:.875rem;margin-bottom:1rem">Still have questions?</p>
+      <a href="contact.html" class="btn btn--green">Contact Our Team →</a>
+    </div>
+  </div>
+
+  <script>
+    initLayout();
+
+    function toggle(item) {
+      const isOpen = item.classList.contains("open");
+      document.querySelectorAll(".faq-item.open").forEach((i) => i.classList.remove("open"));
+      document.querySelectorAll(".faq-q.open").forEach((q) => q.classList.remove("open"));
+      if (!isOpen) {
+        item.classList.add("open");
+        item.querySelector(".faq-q").classList.add("open");
+      }
+    }
+  </script>
+</body>
+</html>

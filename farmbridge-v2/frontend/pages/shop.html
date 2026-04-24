@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shop — FarmBridge</title>
+  <meta name="description" content="Browse all agricultural products from Nigerian farmers. Filter by category, state, or search by name." />
+  <link rel="stylesheet" href="css/styles.css" />
+  <style>
+    .controls-bar {
+      background: var(--white); border-bottom: 1px solid var(--border);
+      padding: 1rem 0; position: sticky; top: var(--nav-h); z-index: 90;
+      box-shadow: var(--shadow-xs);
+    }
+    .controls-top { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; margin-bottom: .8rem; }
+    .controls-top .search-wrap { flex: 1; min-width: 200px; }
+    .results-meta { font-size: .83rem; color: var(--muted); white-space: nowrap; }
+    .sort-select { border: 1.5px solid var(--border); border-radius: var(--r-pill); padding: .4rem .9rem; font-size: .83rem; background: var(--white); cursor: pointer; }
+  </style>
+</head>
+<body>
+  <script src="js/api.js"></script>
+  <script src="js/layout.js"></script>
+
+  <div class="page-hero" style="padding:2.5rem 1.5rem 2rem">
+    <div class="page-hero__inner">
+      <span class="page-eyebrow">🛒 Marketplace</span>
+      <h1>Shop Farm Products</h1>
+      <p>Fresh produce listed directly by Nigerian farmers</p>
+    </div>
+  </div>
+
+  <!-- Controls -->
+  <div class="controls-bar">
+    <div class="container">
+      <div class="controls-top">
+        <div class="search-wrap">
+          <input type="text" id="searchInput" placeholder="Search tomatoes, yam, maize…" />
+          <button onclick="applySearch()">Search</button>
+        </div>
+        <span class="results-meta" id="resultsMeta">Loading…</span>
+        <select class="sort-select" id="stateFilter" onchange="applyFilters()">
+          <option value="">All States</option>
+          <option>Abia</option><option>Adamawa</option><option>Akwa Ibom</option><option>Anambra</option>
+          <option>Bauchi</option><option>Bayelsa</option><option>Benue</option><option>Borno</option>
+          <option>Cross River</option><option>Delta</option><option>Ebonyi</option><option>Edo</option>
+          <option>Ekiti</option><option>Enugu</option><option>FCT</option><option>Gombe</option>
+          <option>Imo</option><option>Jigawa</option><option>Kaduna</option><option>Kano</option>
+          <option>Katsina</option><option>Kebbi</option><option>Kogi</option><option>Kwara</option>
+          <option>Lagos</option><option>Nasarawa</option><option>Niger</option><option>Ogun</option>
+          <option>Ondo</option><option>Osun</option><option>Oyo</option><option>Plateau</option>
+          <option>Rivers</option><option>Sokoto</option><option>Taraba</option><option>Yobe</option><option>Zamfara</option>
+        </select>
+      </div>
+      <div class="filter-bar">
+        <button class="chip active" data-cat="" onclick="selectCat(this)">All</button>
+        <button class="chip" data-cat="GRAINS" onclick="selectCat(this)">🌾 Grains</button>
+        <button class="chip" data-cat="VEGETABLES" onclick="selectCat(this)">🥦 Vegetables</button>
+        <button class="chip" data-cat="FRUITS" onclick="selectCat(this)">🍊 Fruits</button>
+        <button class="chip" data-cat="TUBERS" onclick="selectCat(this)">🍠 Tubers</button>
+        <button class="chip" data-cat="LEGUMES" onclick="selectCat(this)">🫘 Legumes</button>
+        <button class="chip" data-cat="LIVESTOCK" onclick="selectCat(this)">🐄 Livestock</button>
+        <button class="chip" data-cat="DAIRY" onclick="selectCat(this)">🥛 Dairy</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Product Grid -->
+  <main class="section">
+    <div class="container">
+      <div class="products-grid" id="grid"></div>
+      <div class="pagination" id="pager"></div>
+    </div>
+  </main>
+
+  <script>
+    initLayout("shop");
+
+    let page = 1, cat = "", search = "", state = "";
+    let debounce;
+
+    // Read URL params on load
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("category")) {
+      cat = params.get("category");
+      document.querySelectorAll(".chip").forEach((c) => c.classList.toggle("active", c.dataset.cat === cat));
+    }
+
+    document.getElementById("searchInput").addEventListener("input", (e) => {
+      clearTimeout(debounce);
+      debounce = setTimeout(() => { search = e.target.value.trim(); page = 1; load(); }, 400);
+    });
+
+    async function load() {
+      const grid = document.getElementById("grid");
+      grid.innerHTML = Utils.skels(8);
+      try {
+        state = document.getElementById("stateFilter").value;
+        const { data, pagination } = await ProductsAPI.getAll({ category: cat, search, state, page });
+        document.getElementById("resultsMeta").textContent = `${pagination.total} product${pagination.total !== 1 ? "s" : ""} found`;
+        grid.innerHTML = data.length ? data.map(Utils.card).join("") : `<div class="empty" style="grid-column:1/-1"><div class="empty__icon">🌱</div><h3>No products found</h3><p>Try a different filter or search term.</p></div>`;
+        renderPager(pagination);
+      } catch (err) {
+        grid.innerHTML = `<div class="empty" style="grid-column:1/-1"><div class="empty__icon">⚠️</div><h3>Couldn't load products</h3><p>${err.message}</p><button class="btn btn--green" style="margin-top:1rem" onclick="load()">Retry</button></div>`;
+      }
+    }
+
+    function renderPager({ totalPages, page: cur }) {
+      const nav = document.getElementById("pager");
+      if (totalPages <= 1) { nav.innerHTML = ""; return; }
+      let h = `<button class="page-btn" onclick="goPage(${cur - 1})" ${cur===1?"disabled":""}>‹</button>`;
+      for (let i = 1; i <= totalPages; i++) h += `<button class="page-btn ${i===cur?"active":""}" onclick="goPage(${i})">${i}</button>`;
+      h += `<button class="page-btn" onclick="goPage(${cur + 1})" ${cur===totalPages?"disabled":""}>›</button>`;
+      nav.innerHTML = h;
+    }
+
+    function goPage(p) { page = p; window.scrollTo({ top: 0, behavior: "smooth" }); load(); }
+    function selectCat(el) { document.querySelectorAll(".chip").forEach((c) => c.classList.remove("active")); el.classList.add("active"); cat = el.dataset.cat; page = 1; load(); }
+    function applyFilters() { page = 1; load(); }
+    function applySearch() { search = document.getElementById("searchInput").value.trim(); page = 1; load(); }
+
+    load();
+  </script>
+</body>
+</html>

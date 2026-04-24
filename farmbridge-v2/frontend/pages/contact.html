@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact — FarmBridge</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <style>
+    .contact-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; max-width: 900px; margin: 0 auto; padding: 3rem 1.5rem 5rem; }
+    @media(max-width:768px) { .contact-layout { grid-template-columns: 1fr; gap: 2rem; } }
+    .form-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--r-xl); padding: 2rem; box-shadow: var(--shadow-md); }
+    .form-grid { display: flex; flex-direction: column; gap: 1.1rem; }
+    .info-item { display: flex; gap: 1rem; align-items: flex-start; margin-bottom: 1.5rem; }
+    .info-icon { width: 44px; height: 44px; border-radius: var(--r-md); background: var(--g100); color: var(--g700); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; }
+    .info-label { font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); margin-bottom: .2rem; }
+    .info-value { font-size: .92rem; color: var(--ink2); }
+    .success-msg { background: var(--g50); border: 2px solid var(--g300); border-radius: var(--r-md); padding: 2rem; text-align: center; display: none; }
+    .success-msg.show { display: block; }
+  </style>
+</head>
+<body>
+  <script src="js/api.js"></script>
+  <script src="js/layout.js"></script>
+
+  <div class="page-hero">
+    <div class="page-hero__inner">
+      <span class="page-eyebrow">📬 Get in Touch</span>
+      <h1>Contact Us</h1>
+      <p>Questions, feedback, or partnership inquiries — we'd love to hear from you.</p>
+    </div>
+  </div>
+
+  <div class="contact-layout">
+    <!-- Form -->
+    <div class="form-card">
+      <h2 style="font-size:1.3rem;margin-bottom:1.5rem">Send a Message</h2>
+      <form id="contactForm" onsubmit="submitContact(event)" novalidate>
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label" for="cName">Your Name *</label>
+            <input class="form-control" type="text" id="cName" placeholder="Emeka Okafor" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="cEmail">Email Address *</label>
+            <input class="form-control" type="email" id="cEmail" placeholder="emeka@example.com" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="cSubject">Subject *</label>
+            <select class="form-control" id="cSubject" required>
+              <option value="">— Select a topic —</option>
+              <option>Farmer Registration Help</option>
+              <option>Listing a Product</option>
+              <option>Partnership / Bulk Buying</option>
+              <option>Report a Listing</option>
+              <option>Technical Issue</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="cMsg">Message *</label>
+            <textarea class="form-control" id="cMsg" rows="5" placeholder="Describe your question or feedback…" required></textarea>
+          </div>
+          <button type="submit" class="btn btn--green btn--full" id="cBtn">Send Message →</button>
+        </div>
+      </form>
+      <div class="success-msg" id="cSuccess">
+        <div style="font-size:3rem;margin-bottom:.75rem">📬</div>
+        <h3 style="color:var(--g700);margin-bottom:.5rem">Message Sent!</h3>
+        <p style="color:var(--ink3)">Thank you for reaching out. We'll respond within 24 hours.</p>
+      </div>
+    </div>
+
+    <!-- Info -->
+    <div>
+      <h2 style="font-size:1.3rem;margin-bottom:1.5rem">Contact Information</h2>
+      <div class="info-item">
+        <div class="info-icon">📧</div>
+        <div><div class="info-label">Email</div><div class="info-value">hello@farmbridge.ng</div></div>
+      </div>
+      <div class="info-item">
+        <div class="info-icon">📱</div>
+        <div><div class="info-label">WhatsApp</div><div class="info-value">+234 800 FARMBRIDGE</div></div>
+      </div>
+      <div class="info-item">
+        <div class="info-icon">📍</div>
+        <div><div class="info-label">Headquarters</div><div class="info-value">Lagos, Nigeria</div></div>
+      </div>
+      <div class="info-item">
+        <div class="info-icon">🕐</div>
+        <div><div class="info-label">Response Time</div><div class="info-value">Within 24 hours (Mon–Sat)</div></div>
+      </div>
+
+      <div style="background:var(--cream2);border-radius:var(--r-lg);padding:1.5rem;margin-top:1rem">
+        <h3 style="font-size:1rem;margin-bottom:.75rem">Are you a farmer?</h3>
+        <p style="font-size:.875rem;color:var(--ink3);margin-bottom:1rem">Register your farm for free and start reaching buyers across Nigeria in minutes.</p>
+        <a href="register-farmer.html" class="btn btn--green btn--sm">Register Now →</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    initLayout("contact");
+
+    function submitContact(e) {
+      e.preventDefault();
+      const btn = document.getElementById("cBtn");
+      btn.disabled = true; btn.textContent = "Sending…";
+      // In production: POST to your backend or a form service like Formspree/Netlify Forms
+      setTimeout(() => {
+        document.getElementById("contactForm").style.display = "none";
+        document.getElementById("cSuccess").classList.add("show");
+        Utils.toast("Message sent!");
+      }, 1000);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  phone     String   @unique
+  role      Role     @default(BUYER)
+  createdAt DateTime @default(now())
+  farmer    Farmer?
+}
+
+model Farmer {
+  id        String    @id @default(uuid())
+  userId    String    @unique
+  user      User      @relation(fields: [userId], references: [id])
+  farmName  String
+  state     String
+  verified  Boolean   @default(false)   // ← Admin can verify farmers
+  products  Product[]
+  createdAt DateTime  @default(now())
+}
+
+model Product {
+  id          String        @id @default(uuid())
+  farmerId    String
+  farmer      Farmer        @relation(fields: [farmerId], references: [id])
+  name        String
+  category    Category
+  price       Float
+  unit        String
+  description String
+  imageUrl    String
+  available   Boolean       @default(true)
+  status      ProductStatus @default(PENDING)   // ← Admin approves/rejects/flags
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+enum Role {
+  FARMER
+  BUYER
+}
+
+enum Category {
+  GRAINS
+  VEGETABLES
+  FRUITS
+  TUBERS
+  LEGUMES
+  LIVESTOCK
+  DAIRY
+  OTHER
+}
+
+enum ProductStatus {
+  PENDING    // Newly listed, awaiting admin review
+  APPROVED   // Visible to buyers
+  REJECTED   // Not approved, hidden from buyers
+  FLAGGED    // Reported, under review
+}
